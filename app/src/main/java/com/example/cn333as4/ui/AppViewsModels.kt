@@ -33,7 +33,7 @@ class AppViewsModels: ViewModel(){
     fun updateURL(){
         _uiState.update { currentState ->
             currentState.copy(
-                url = "https://api.lorem.space/image/" + categoryType + "?w=" + width.toString() + "&h=" + height.toString()
+                url = "https://loremflickr.com/$width/$height/$categoryType"
             )
         }
     }
@@ -42,8 +42,8 @@ class AppViewsModels: ViewModel(){
         value: String,
         type: String
     ){
-        val value = if(value == "") "0" else value
-        if(value.toInt() > 2000 || value.toInt() < 8 ){
+        val value = value.toIntOrNull()
+        if(value == null){
             if(type.equals("height", ignoreCase = true)){
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -60,8 +60,18 @@ class AppViewsModels: ViewModel(){
         }else{
             if(type.equals("height", ignoreCase = true)){
                 height = value.toInt()
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        widthInvalid = false
+                    )
+                }
             }else if(type.equals("width", ignoreCase = true)){
                 width = value.toInt()
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        widthInvalid = false
+                    )
+                }
             }
         }
 
