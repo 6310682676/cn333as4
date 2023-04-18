@@ -17,6 +17,7 @@ class AppViewsModels: ViewModel(){
 
     private var height by mutableStateOf(8)
     private var width by mutableStateOf(8)
+    private var categoryType by mutableStateOf("movie")
 
     init {
         resetGame()
@@ -29,8 +30,13 @@ class AppViewsModels: ViewModel(){
         )
     }
 
-
-
+    fun updateURL(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                url = "https://api.lorem.space/image/" + categoryType + "?w=" + width.toString() + "&h=" + height.toString()
+            )
+        }
+    }
 
     fun updateUserInput(
         value: String,

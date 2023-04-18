@@ -1,12 +1,7 @@
 package com.example.cn333as4.ui
 
 //import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
@@ -35,6 +30,7 @@ fun FirstScreen (
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Spacer(modifier = Modifier.height(60.dp))
         Text(
             text = "Random Image",
@@ -51,6 +47,12 @@ fun FirstScreen (
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Enter Image Width:", modifier = Modifier.padding(end = 8.dp))
+            Box(
+                modifier = Modifier.size(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "\uD83D\uDC4D")
+            }
             OutlinedTextField(
                 value = width,
                 onValueChange = { width = it
@@ -58,6 +60,7 @@ fun FirstScreen (
                 label = { Text(text = "Image size") },
                 modifier = Modifier.fillMaxWidth()
             )
+
         }
         if(gameUiState.widthInvalid){
 
@@ -67,6 +70,12 @@ fun FirstScreen (
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "Enter Image Height:", modifier = Modifier.padding(end = 8.dp))
+            Box(
+                modifier = Modifier.size(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "\uD83D\uDC4D")
+            }
             OutlinedTextField(
                 value = height,
                 onValueChange = {height = it
