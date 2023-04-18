@@ -54,7 +54,7 @@ fun FirstScreen (
             OutlinedTextField(
                 value = width,
                 onValueChange = { width = it
-                                gameViewModel.UpdateUserInput(it, "width")},
+                                gameViewModel.updateUserInput(it, "width")},
                 label = { Text(text = "Image size") },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -70,7 +70,7 @@ fun FirstScreen (
             OutlinedTextField(
                 value = height,
                 onValueChange = {height = it
-                    gameViewModel.UpdateUserInput(it, "height")},
+                    gameViewModel.updateUserInput(it, "height")},
                 label = { Text(text = "Image size") },
                 modifier = Modifier.fillMaxWidth()
             )

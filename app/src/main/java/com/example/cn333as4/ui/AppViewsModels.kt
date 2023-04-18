@@ -1,5 +1,8 @@
 package com.example.cn333as4.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,11 +15,14 @@ class AppViewsModels: ViewModel(){
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
+    private var height by mutableStateOf(8)
+    private var width by mutableStateOf(8)
+
     init {
         resetGame()
     }
 
-    fun resetGame() {
+    private fun resetGame() {
         _uiState.value = AppUiState(
             heightInvalid = false,
             widthInvalid = false
@@ -24,7 +30,9 @@ class AppViewsModels: ViewModel(){
     }
 
 
-    fun UpdateUserInput(
+
+
+    fun updateUserInput(
         value: String,
         type: String
     ){
@@ -42,6 +50,12 @@ class AppViewsModels: ViewModel(){
                         widthInvalid = true
                     )
                 }
+            }
+        }else{
+            if(type.equals("height", ignoreCase = true)){
+                height = value.toInt()
+            }else if(type.equals("width", ignoreCase = true)){
+                width = value.toInt()
             }
         }
 
