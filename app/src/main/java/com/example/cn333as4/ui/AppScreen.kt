@@ -24,16 +24,19 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.cn333as4.AppScreen
 
-val choices = listOf("aaaaaa", "bbbbbb", "cccccc", "dddddd", "eeeeee", "ffffff")
+val choices = listOf("dog", "cat", "human", "dddddd", "eeeeee", "ffffff")
 
 
 @Composable
 fun FirstScreen (
     modifier: Modifier = Modifier,
-    gameViewModel: AppViewsModels = viewModel()
+    gameViewModel: AppViewsModels,
+    navController: NavController
 ){
     val gameUiState by gameViewModel.uiState.collectAsState()
 
@@ -62,12 +65,15 @@ fun FirstScreen (
                 modifier = Modifier.size(32.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if(gameUiState.widthInvalid){
-                    Text(text = "\uDC4D") //wait to add wrong emoji
+                if(gameUiState.enterWidth){
+                    if(gameUiState.widthInvalid){
+                        Text(text = "\uDC4D") //wait to add wrong emoji
+                    }
+                    else{
+                        Text(text = "\uD83D\uDC4D")
+                    }
                 }
-                else{
-                    Text(text = "\uD83D\uDC4D")
-                }
+
             }
             OutlinedTextField(
                 value = width,
@@ -90,11 +96,13 @@ fun FirstScreen (
                 modifier = Modifier.size(32.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if(gameUiState.heightInvalid){
-                    Text(text = "\uDC4D") //wait to add wrong emoji
-                }
-                else{
-                    Text(text = "\uD83D\uDC4D")
+                if(gameUiState.enterHeight){
+                    if(gameUiState.heightInvalid){
+                        Text(text = "\uDC4D") //wait to add wrong emoji
+                    }
+                    else{
+                        Text(text = "\uD83D\uDC4D")
+                    }
                 }
             }
             OutlinedTextField(
@@ -117,7 +125,9 @@ fun FirstScreen (
             choices.take(3).forEach { option ->
                 RadioButton(
                     selected = selectedOption.value == option,
-                    onClick = { selectedOption.value = option }
+                    onClick = { selectedOption.value = option
+                        gameViewModel.updateCategory(option)
+                    }
                 )
                 Text(text = option)
             }
@@ -126,28 +136,36 @@ fun FirstScreen (
             choices.takeLast(3).forEach { option ->
                 RadioButton(
                     selected = selectedOption.value == option,
-                    onClick = { selectedOption.value = option }
+                    onClick = { selectedOption.value = option
+                            gameViewModel.updateCategory(option)
+                    }
                 )
                 Text(text = option)
             }
         }
         Spacer(modifier = Modifier.height(25.dp))
-        Button(
-            onClick = {
-                //your onclick code
-            },
-            border = BorderStroke(1.dp, Color.Red),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red)
-        ) {
-            Text(text = "Button with border", color = Color.DarkGray)
+        if(gameUiState.inputAllValid){
+            Button(
+                onClick = {
+                    navController.navigate(AppScreen.Second.name)
+                },
+                border = BorderStroke(1.dp, Color.Red),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red)
+            ) {
+                Text(text = "Button with border", color = Color.DarkGray)
+            }
         }
+
 
     }
 }
 
 @Composable
-fun SecondScreen(){
-
+fun SecondScreen(
+    gameViewModel: AppViewsModels,
+    navController: NavController
+){
+    val gameUiState by gameViewModel.uiState.collectAsState()
     Column(modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(100.dp))
@@ -160,16 +178,26 @@ fun SecondScreen(){
         Spacer(modifier = Modifier.height(20.dp))
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data("https://loremflickr.com/320/240")
+                .data(gameUiState.url)
                 .crossfade(true)
                 .build(),
             contentDescription = "",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(400.dp) //can add width and height here
                 .border(BorderStroke(1.dp, Color.Black))
                 .background(Color.Yellow)
         )
+
+        Button(
+            onClick = {
+                navController.navigate(AppScreen.Start.name)
+                gameViewModel.resetGame()
+            },
+            border = BorderStroke(1.dp, Color.Red),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red)
+        ) {
+            Text(text = "Restart", color = Color.DarkGray)
+        }
 
 
     }

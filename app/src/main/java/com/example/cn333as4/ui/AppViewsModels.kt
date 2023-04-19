@@ -23,10 +23,14 @@ class AppViewsModels: ViewModel(){
         resetGame()
     }
 
-    private fun resetGame() {
+    fun resetGame() {
         _uiState.value = AppUiState(
             heightInvalid = false,
-            widthInvalid = false
+            widthInvalid = false,
+            inputAllValid = false,
+            enterHeight = false,
+            enterWidth = false,
+            enterCategoryType = false
         )
     }
 
@@ -36,8 +40,38 @@ class AppViewsModels: ViewModel(){
                 url = "https://loremflickr.com/$width/$height/$categoryType"
             )
         }
+
     }
 
+    fun checkAllInput(){
+        if(uiState.value.enterHeight && uiState.value.enterWidth && uiState.value.enterCategoryType && !uiState.value.heightInvalid && !uiState.value.widthInvalid     ){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    inputAllValid = true
+                )
+            }
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    inputAllValid = false
+                )
+            }
+        }
+    }
+
+    fun updateCategory(
+        value: String
+    ){
+        categoryType = value
+        _uiState.update { currentState ->
+            currentState.copy(
+                enterCategoryType = true
+            )
+        }
+        updateURL()
+        checkAllInput()
+
+    }
     fun updateUserInput(
         value: String,
         type: String
@@ -47,13 +81,16 @@ class AppViewsModels: ViewModel(){
             if(type.equals("height", ignoreCase = true)){
                 _uiState.update { currentState ->
                     currentState.copy(
-                        heightInvalid = true
+                        heightInvalid = true,
+                        enterHeight = true
                     )
                 }
+
             }else if(type.equals("width", ignoreCase = true)){
                 _uiState.update { currentState ->
                     currentState.copy(
-                        widthInvalid = true
+                        widthInvalid = true,
+                        enterWidth = true
                     )
                 }
             }
@@ -62,18 +99,23 @@ class AppViewsModels: ViewModel(){
                 height = value.toInt()
                 _uiState.update { currentState ->
                     currentState.copy(
-                        widthInvalid = false
+                        heightInvalid = false,
+                        enterHeight = true
                     )
                 }
+                updateURL()
             }else if(type.equals("width", ignoreCase = true)){
                 width = value.toInt()
                 _uiState.update { currentState ->
                     currentState.copy(
-                        widthInvalid = false
+                        widthInvalid = false,
+                        enterWidth = true
                     )
                 }
+                updateURL()
             }
         }
+        checkAllInput()
 
     }
 }
