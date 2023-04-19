@@ -1,11 +1,12 @@
 package com.example.cn333as4.ui
 
-//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedTextField
@@ -20,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.cn333as4.AppScreen
 
-val choices = listOf("dog", "cat", "human", "dddddd", "eeeeee", "ffffff")
+val choices = listOf("dog", "cat", "human", "moutain", "sea", "sky", "bird", "universe", "boy", "girl", "actor", "building")
 
 
 @Composable
@@ -49,9 +51,16 @@ fun FirstScreen (
         Text(
             text = "Random Image",
             fontSize = 40.sp,
-            color = Color.DarkGray,
+            color = Color(218, 165, 32),
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Italic
+        )
+        Spacer(modifier = Modifier.height(60.dp))
+        Text(
+            text = "Image Size",
+            fontSize = 16.sp,
+            color = Color.DarkGray,
+            fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
         var height by remember { mutableStateOf("") }
@@ -67,7 +76,7 @@ fun FirstScreen (
             ) {
                 if(gameUiState.enterWidth){
                     if(gameUiState.widthInvalid){
-                        Text(text = "\uDC4D") //wait to add wrong emoji
+                        Text(text = "\u274C") //wait to add wrong emoji
                     }
                     else{
                         Text(text = "\uD83D\uDC4D")
@@ -78,8 +87,9 @@ fun FirstScreen (
             OutlinedTextField(
                 value = width,
                 onValueChange = { width = it
-                                gameViewModel.updateUserInput(it, "width")},
+                    gameViewModel.updateUserInput(it, "width")},
                 label = { Text(text = "Image Width") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -98,7 +108,7 @@ fun FirstScreen (
             ) {
                 if(gameUiState.enterHeight){
                     if(gameUiState.heightInvalid){
-                        Text(text = "\uDC4D") //wait to add wrong emoji
+                        Text(text = "\u274C") //wait to add wrong emoji
                     }
                     else{
                         Text(text = "\uD83D\uDC4D")
@@ -110,6 +120,7 @@ fun FirstScreen (
                 onValueChange = {height = it
                     gameViewModel.updateUserInput(it, "height")},
                 label = { Text(text = "Image Height") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -117,46 +128,45 @@ fun FirstScreen (
 
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Category")
+        Spacer(modifier = Modifier.height(40.dp))
+        Text(text = "Category",
+            fontSize = 16.sp,
+            color = Color.DarkGray,
+            fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
         val selectedOption = remember { mutableStateOf("") }
-        Row {
-            choices.take(3).forEach { option ->
-                RadioButton(
-                    selected = selectedOption.value == option,
-                    onClick = { selectedOption.value = option
-                        gameViewModel.updateCategory(option)
+        for (i in 0 until 4) {
+            Row {
+                for (j in 0 until 3) {
+                    val index = i * 3 + j
+                    if (index >= choices.size) {
+                        break
                     }
-                )
-                Text(text = option)
-            }
-        }
-        Row {
-            choices.takeLast(3).forEach { option ->
-                RadioButton(
-                    selected = selectedOption.value == option,
-                    onClick = { selectedOption.value = option
+                    val option = choices[index]
+                    RadioButton(
+                        selected = selectedOption.value == option,
+                        onClick = {
+                            selectedOption.value = option
                             gameViewModel.updateCategory(option)
-                    }
-                )
-                Text(text = option)
+                        }
+                    )
+                    Text(text = option,modifier = Modifier.align(Alignment.CenterVertically))
+                }
             }
         }
+
         Spacer(modifier = Modifier.height(25.dp))
         if(gameUiState.inputAllValid){
             Button(
                 onClick = {
                     navController.navigate(AppScreen.Second.name)
                 },
-                border = BorderStroke(1.dp, Color.Red),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red)
+                border = BorderStroke(1.dp, Color(251, 236, 93)),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(218, 165, 32))
             ) {
-                Text(text = "Button with border", color = Color.DarkGray)
+                Text(text = "Generate", color = Color.DarkGray)
             }
         }
-
-
     }
 }
 
@@ -185,18 +195,17 @@ fun SecondScreen(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .border(BorderStroke(1.dp, Color.Black))
-                .background(Color.Yellow)
         )
-
+        Spacer(modifier = Modifier.height(30.dp))
         Button(
             onClick = {
                 navController.navigate(AppScreen.Start.name)
                 gameViewModel.resetGame()
             },
-            border = BorderStroke(1.dp, Color.Red),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red)
+            border = BorderStroke(1.dp, Color(251, 236, 93)),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(218, 165, 32))
         ) {
-            Text(text = "Restart", color = Color.DarkGray)
+            Text(text = "Back", color = Color.DarkGray)
         }
 
 
